@@ -1,7 +1,14 @@
 import React from "react";
+import Header from "../components/Header";
+import Steps from "../components/Steps";
 
 function Home() {
-  return <div>Home Page</div>;
+  return (
+    <div>
+      <Header />
+      <Steps />
+    </div>
+  );
 }
 
 export default Home;
