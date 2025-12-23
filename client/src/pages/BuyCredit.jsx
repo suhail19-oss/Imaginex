@@ -1,23 +1,80 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { assets, plans } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
+import { motion } from "framer-motion";
+
+const headerFade = {
+  hidden: { opacity: 0, scale: 0.98 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
+const list = {
+  hidden: {},
+  show: {
+    transition: {
+      delayChildren: 0.2,
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const card = {
+  hidden: { opacity: 0, y: 40 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
 
 function BuyCredit() {
   const { user } = useContext(AppContext);
 
   return (
     <div className="min-h-[80vh] text-center pt-14 mb-10 px-4">
-      <button className="px-10 py-2 rounded-full mb-6 cursor-pointer bg-gradient-to-r from-gray-900 to-gray-700 text-white tracking-wide hover:opacity-90 transition outline-none focus:outline-none">
+      <motion.button
+        variants={headerFade}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="px-10 py-2 rounded-full mb-6 cursor-pointer
+                   bg-gradient-to-r from-gray-900 to-gray-700
+                   text-white tracking-wide hover:opacity-90 transition
+                   outline-none focus:outline-none"
+      >
         Our Plans
-      </button>
+      </motion.button>
 
-      <h1 className="text-3xl font-medium mb-10">Choose the Plan</h1>
+      <motion.h1
+        variants={headerFade}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        transition={{ delay: 0.1 }}
+        className="text-3xl font-medium mb-10"
+      >
+        Choose the Plan
+      </motion.h1>
 
-      <div className="flex flex-wrap justify-center gap-8 text-left">
+      <motion.div
+        className="flex flex-wrap justify-center gap-8 text-left"
+        variants={list}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+      >
         {plans.map((item, index) => (
-          <div
+          <motion.div
             key={index}
-            className="bg-white rounded-2xl py-12 px-8 text-gray-600 w-72 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden"
+            variants={card}
+            whileHover={{ y: -8 }}
+            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+            className="bg-white rounded-2xl py-12 px-8 text-gray-600 w-72
+                       shadow-md hover:shadow-2xl relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-transparent to-gray-100 opacity-0 hover:opacity-100 transition" />
 
@@ -37,12 +94,18 @@ function BuyCredit() {
               </span>
             </p>
 
-            <button className="w-full mt-8 py-3 rounded-full text-sm cursor-pointer bg-black text-white hover:scale-[1.03] active:scale-95 transition-transform outline-none focus:outline-none relative z-10">
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              className="w-full mt-8 py-3 rounded-full text-sm cursor-pointer
+                         bg-black text-white transition-transform
+                         outline-none focus:outline-none relative z-10"
+            >
               {user ? "Purchase" : "Get Started"}
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

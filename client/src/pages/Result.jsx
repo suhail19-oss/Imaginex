@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { assets } from "../assets/assets";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Result() {
   const [image, setImage] = useState(assets.sample_img_1);
@@ -14,64 +15,108 @@ function Result() {
       onSubmit={onSubmitHandler}
       className="flex flex-col min-h-[90vh] items-center justify-center px-4"
     >
-      <div className="flex flex-col items-center">
-        <div className="relative bg-neutral-100 rounded-xl shadow-lg p-4">
-          <img
-            src={image}
-            alt="Generated result"
-            className="max-w-sm w-full rounded-lg object-cover"
-          />
-          <span
-            className={`absolute bottom-0 left-0 h-1 bg-blue-500 rounded-b-lg ${
-              loading ? "w-full transition-all duration-[10s]" : "w-0"
-            }`}
-          />
-        </div>
+      <div className="relative">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={image}
+            className="relative bg-white p-4 rounded-2xl shadow-xl overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <motion.img
+              src={image}
+              alt="Generated result"
+              className="max-w-sm w-full rounded-xl object-cover"
+              initial={{ scale: 1.05, filter: "brightness(0.7)" }}
+              animate={{ scale: 1, filter: "brightness(1)" }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
 
-        {loading && (
-          <p className="mt-3 text-sm text-gray-500 animate-pulse">
-            Generating your image...
-          </p>
-        )}
+            {loading && (
+              <motion.div
+                className="absolute inset-0 rounded-2xl bg-gradient-to-b from-transparent via-white/60 to-transparent"
+                initial={{ y: "-100%" }}
+                animate={{ y: "100%" }}
+                transition={{ duration: 1.2, ease: "linear" }}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {!isImageloaded && (
-        <div className="flex w-full max-w-xl bg-neutral-800 text-white text-sm mt-12 rounded-full overflow-hidden shadow-md">
-          <input
-            onChange={(e) => setInput(e.target.value)}
-            value={input}
-            type="text"
-            placeholder="Describe what you want to generate"
-            className="flex-1 bg-transparent px-6 py-4 outline-none placeholder-gray-400"
-          />
-          <button
-            type="submit"
-            className="bg-black px-8 sm:px-14 py-3 cursor-pointer hover:bg-zinc-800 transition-colors"
+      <AnimatePresence>
+        {loading && (
+          <motion.p
+            className="mt-4 text-xs tracking-widest text-gray-500 uppercase"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.15, duration: 0.3 }}
           >
-            Generate
-          </button>
-        </div>
-      )}
+            Scanning prompt data
+          </motion.p>
+        )}
+      </AnimatePresence>
 
-      {isImageloaded && (
-        <div className="flex gap-4 flex-wrap justify-center mt-12">
-          <button
-            type="button"
-            onClick={() => setisImageloaded(false)}
-            className="border border-zinc-900 text-zinc-900 px-8 py-3 rounded-full cursor-pointer hover:bg-zinc-900 hover:text-white transition"
+      <AnimatePresence>
+        {!isImageloaded && (
+          <motion.div
+            className="mt-12 flex w-full max-w-xl bg-neutral-800 text-white rounded-full overflow-hidden shadow-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ delay: 0.25, duration: 0.4, ease: "easeOut" }}
           >
-            Generate Another
-          </button>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              type="text"
+              placeholder="Describe what you want to generate"
+              className="flex-1 bg-transparent px-6 py-4 outline-none placeholder-gray-400"
+            />
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-black px-10 py-3 cursor-pointer hover:bg-zinc-800"
+            >
+              Generate
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          <a
-            href={image}
-            download
-            className="bg-zinc-900 text-white px-10 py-3 rounded-full hover:bg-black transition cursor-pointer"
+      <AnimatePresence>
+        {isImageloaded && (
+          <motion.div
+            className="mt-12 flex gap-4 flex-wrap justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25, duration: 0.4 }}
           >
-            Download
-          </a>
-        </div>
-      )}
+            <motion.button
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => setisImageloaded(false)}
+              className="px-8 py-3 rounded-full border border-zinc-900 text-zinc-900 hover:bg-zinc-900 cursor-pointer hover:text-white transition"
+            >
+              Generate Another
+            </motion.button>
+
+            <motion.a
+              href={image}
+              download
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.96 }}
+              className="px-10 py-3 rounded-full bg-zinc-900 text-white hover:bg-black transition"
+            >
+              Download
+            </motion.a>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </form>
   );
 }
