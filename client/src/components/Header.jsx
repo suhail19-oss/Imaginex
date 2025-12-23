@@ -1,8 +1,8 @@
 import { assets } from "../assets/assets";
-
+import { motion } from "framer-motion";
 function Header() {
   return (
-    <div className="flex flex-col items-center text-center my-20 px-4">
+    <motion.div className="flex flex-col items-center text-center my-20 px-4">
       <div className="inline-flex items-center gap-2 text-stone-600 bg-white px-6 py-1 rounded-full border border-neutral-400">
         <p className="text-sm sm:text-base">Where words become visuals</p>
 
@@ -51,7 +51,7 @@ function Header() {
       <p className="mt-3 text-sm text-neutral-500">
         Images generated using Imaginex
       </p>
-    </div>
+    </motion.div>
   );
 }
 
