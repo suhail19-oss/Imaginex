@@ -20,17 +20,29 @@ function Header() {
         instantly.
       </p>
 
-      <button className="mt-8 flex items-center gap-2 rounded-full bg-black px-12 py-3 text-white text-base sm:text-lg hover:opacity-90 transition">
-        Generate images
+      <button
+        className="mt-8 flex items-center gap-2 rounded-full bg-black px-12 py-3
+             text-white text-base sm:text-lg cursor-pointer
+             transition-all duration-300 ease-out
+             hover:opacity-90 hover:-translate-y-0.5 hover:shadow-lg"
+      >
+        Generate Images
         <img src={assets.star_group} alt="generate" className="h-6" />
       </button>
 
       <div className="mt-16 flex flex-wrap justify-center gap-3">
-        {Array.from({ length: 6 }).map((_, index) => (
+        {[
+          assets.sample_img_2,
+          assets.sample_img_3,
+          assets.sample_img_4,
+          assets.sample_img_5,
+          assets.sample_img_6,
+          assets.sample_img_7,
+        ].map((img, index) => (
           <img
             key={index}
-            src={index % 2 ? assets.sample_img_2 : assets.sample_img_1}
-            alt="AI generated sample"
+            src={img}
+            alt={`AI generated sample ${index + 2}`}
             className="w-14 sm:w-[70px] rounded cursor-pointer hover:scale-105 transition-transform duration-300"
           />
         ))}
