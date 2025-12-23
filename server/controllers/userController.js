@@ -1,3 +1,4 @@
+import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -102,8 +103,6 @@ const loginUser = async (req, res) => {
     });
   }
 };
-
-import userModel from "../models/userModel.js";
 
 const userCredits = async (req, res) => {
   try {
