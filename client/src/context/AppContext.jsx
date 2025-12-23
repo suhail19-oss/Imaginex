@@ -1,10 +1,62 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
 export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
   const [user, setUser] = useState(null);
-  const [showLogin, setShowLogin] = useState(null);
-  const value = { user, setUser, showLogin, setShowLogin };
+  const [showLogin, setShowLogin] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [credit, setCredit] = useState(false);
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+  const loadCreditsData = async () => {
+    try {
+      const { data } = await axios.get(backendURL + "/api/user/credits", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data.success) {
+        setCredit(data.credits);
+        setUser(data.user);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to load credits");
+    }
+  };
+
+  const logout = () => {
+    try {
+      localStorage.removeItem("token");
+      setToken(null);
+      setUser(null);
+      toast.success("Logged out successfully");
+    } catch (error) {
+      toast.error("Logout failed. Please try again");
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      loadCreditsData();
+    }
+  }, [token]);
+
+  const value = {
+    user,
+    setUser,
+    showLogin,
+    setShowLogin,
+    backendURL,
+    token,
+    setToken,
+    credit,
+    setCredit,
+    loadCreditsData,
+    logout,
+  };
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
   );

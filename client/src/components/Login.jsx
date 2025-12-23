@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { motion, AnimatePresence } from "framer-motion";
-
+import axios from "axios";
+import { toast } from "react-toastify";
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -25,7 +26,41 @@ const item = {
 
 function Login() {
   const [state, setState] = useState("Login");
-  const { setShowLogin } = useContext(AppContext);
+  const { setShowLogin, backendURL, setToken, setUser } =
+    useContext(AppContext);
+  const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      const isLogin = state === "Login";
+      const url = isLogin ? "/api/user/login" : "/api/user/register";
+
+      const payload = isLogin ? { email, password } : { name, email, password };
+
+      const { data } = await axios.post(backendURL + url, payload);
+
+      if (!data.success) {
+        return toast.error(data.message);
+      }
+
+      setToken(data.token);
+      setUser(data.user);
+      localStorage.setItem("token", data.token);
+
+      toast.success(
+        isLogin ? "Logged in successfully" : "Account created successfully"
+      );
+
+      setShowLogin(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -43,6 +78,7 @@ function Login() {
         exit={{ opacity: 0 }}
       >
         <motion.form
+          onSubmit={onSubmitHandler}
           layout
           className="relative w-full max-w-md bg-white rounded-3xl px-10 py-12 shadow-2xl text-slate-600"
           variants={container}
@@ -83,6 +119,8 @@ function Login() {
                   className="w-6 h-6 opacity-60"
                 />
                 <input
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
                   type="text"
                   placeholder="Full Name"
                   required
@@ -102,6 +140,8 @@ function Login() {
               className="w-5 h-5 opacity-60"
             />
             <input
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
               type="email"
               placeholder="Email address"
               required
@@ -114,12 +154,22 @@ function Login() {
             className="mt-5 flex items-center gap-4 bg-gray-100 px-6 py-4 rounded-full"
           >
             <img src={assets.lock_icon} alt="" className="w-5 h-5 opacity-60" />
+
             <input
-              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               required
               className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder-gray-400"
             />
+
+            <span
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="cursor-pointer text-gray-500 text-sm select-none"
+            >
+              {showPassword ? "Hide" : "Show"}
+            </span>
           </motion.div>
 
           <AnimatePresence>
