@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+
 function Result() {
   const [image, setImage] = useState(assets.sample_img_1);
   const [isImageloaded, setisImageloaded] = useState(false);
