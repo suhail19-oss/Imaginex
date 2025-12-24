@@ -1,6 +1,9 @@
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import razorpay from razorpay;
+import transactiondataModel from "../models/transactiondataModel.js";
+import { SchemaTypeOptions } from "mongoose";
 
 const registerUser = async (req, res) => {
   try {
@@ -131,4 +134,88 @@ const userCredits = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, userCredits };
+const razorpayInstance=new razorpay({
+  key_id:process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_SECRET_KEY,
+})
+
+const paymentRazorpay = async (req, res) => {
+  try {
+    const { userId, planId } = req.body;
+
+    if (!userId || !planId) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing details",
+      });
+    }
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    let credits, plan, amount;
+
+    switch (planId) {
+      case "Basic":
+        plan = "Basic";
+        credits = 100;
+        amount = 10;
+        break;
+
+      case "Advanced":
+        plan = "Advanced";
+        credits = 500;
+        amount = 50;
+        break;
+
+      case "Business":
+        plan = "Business";
+        credits = 5000;
+        amount = 250;
+        break;
+
+      default:
+        return res.status(400).json({
+          success: false,
+          message: "Plan not found",
+        });
+    }
+
+    const transactionData = {
+      userId,
+      plan,
+      amount,
+      credits,
+      date: Date.now(),
+    };
+
+    const newTransaction = await transactiondataModel.create(transactionData);
+
+    const options = {
+      amount: amount * 100,
+      currency: process.env.CURRENCY || "INR",
+      receipt: newTransaction._id.toString(),
+    };
+
+    const order = await razorpayInstance.orders.create(options);
+
+    return res.status(200).json({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+export { registerUser, loginUser, userCredits, paymentRazorpay };
