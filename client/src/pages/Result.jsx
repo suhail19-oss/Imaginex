@@ -63,12 +63,18 @@ function Result() {
             />
 
             {loading && (
-              <motion.div
-                className="absolute inset-0 rounded-2xl bg-gradient-to-b from-transparent via-white/60 to-transparent"
-                initial={{ y: "-100%" }}
-                animate={{ y: "100%" }}
-                transition={{ duration: 1.2, ease: "linear" }}
-              />
+              <motion.div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-b
+                 from-white/10 via-white/25 to-white/10"
+                  animate={{ y: ["-100%", "100%"] }}
+                  transition={{
+                    duration: 2,
+                    ease: "linear",
+                    repeat: Infinity,
+                  }}
+                />
+              </motion.div>
             )}
           </motion.div>
         </AnimatePresence>
