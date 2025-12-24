@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { assets } from "../assets/assets";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/Appcontext";
+import { LogOut } from "lucide-react";
 
 function Navbar() {
   const { user, setShowLogin, logout, credit } = useContext(AppContext);
@@ -40,19 +41,19 @@ function Navbar() {
               className="w-10 drop-shadow cursor-pointer"
               alt=""
             />
-            <div className="absolute hidden group-hover:block top-0 right-0 z-10 pt-12">
-              <ul className="bg-white rounded-md text-sm shadow-md px-1 py-1 border-2 border-black">
+
+            <div className="absolute hidden group-hover:block top-2 right-0 z-20 pt-10">
+              <ul className="min-w-[100px] bg-white rounded-xl shadow-lg border border-gray-800 overflow-hidden animate-fade-in">
                 <li
                   onClick={logout}
                   tabIndex={-1}
-                  className="px-4 py-2 text-sm font-medium text-black cursor-pointer
-                 hover:underline underline-offset-4
-                 hover:bg-gray-50
-                 rounded
-                 focus:outline-none focus:ring-0
-                 transition-all duration-200"
+                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 cursor-pointer hover:bg-red-50 active:bg-red-100 transition-all duration-200 group/logout"
                 >
-                  Logout
+                  <LogOut
+                    size={18}
+                    className=" text-red-500 transition-transform duration-200 group-hover/logout:translate-x-1"
+                  />
+                  <span>Logout</span>
                 </li>
               </ul>
             </div>

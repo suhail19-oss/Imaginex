@@ -172,20 +172,6 @@ function Login() {
             </span>
           </motion.div>
 
-          <AnimatePresence>
-            {state === "Login" && (
-              <motion.p
-                variants={item}
-                initial="hidden"
-                animate="show"
-                exit={{ opacity: 0 }}
-                className="text-sm text-blue-600 mt-4 text-right cursor-pointer hover:underline"
-              >
-                Forgot password?
-              </motion.p>
-            )}
-          </AnimatePresence>
-
           <motion.button
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
