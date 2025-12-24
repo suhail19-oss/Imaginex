@@ -5,7 +5,7 @@ import {
   userCredits,
   paymentRazorpay,
   verifyRazorpay,
-} from "../controllers/userController.js";
+} from "../controllers/usercontroller.js";
 import userAuth from "../middlewares/auth.js";
 
 const userRouter = express.Router();
