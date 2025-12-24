@@ -1,8 +1,8 @@
-import userModel from "../models/userModel.js";
+import userModel from "../models/usermodel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import razorpay from "razorpay";
-import transactiondataModel from "../models/transactiondataModel.js";
+import transactiondataModel from "../models/transactiondatamodel.js";
 import { SchemaTypeOptions } from "mongoose";
 import crypto from "crypto";
 
