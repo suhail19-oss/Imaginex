@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
@@ -9,6 +11,7 @@ const AppContextProvider = (props) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [credit, setCredit] = useState(false);
   const backendURL = import.meta.env.VITE_BACKEND_URL;
+  const navigate = useNavigate();
 
   const loadCreditsData = async () => {
     try {
@@ -38,10 +41,46 @@ const AppContextProvider = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (token) {
+  const generateImage = async (prompt) => {
+    try {
+      const { data } = await axios.post(
+        `${backendURL}/api/image/generate`,
+        { prompt },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       loadCreditsData();
+
+      return {
+        success: true,
+        image: data.resultImage,
+      };
+    } catch (error) {
+      const status = error.response?.status;
+      const responseData = error.response?.data;
+
+      if (status === 403) {
+        loadCreditsData();
+        toast.error(responseData?.message || "Insufficient credits");
+
+        return {
+          success: false,
+          creditBalance: 0,
+        };
+      }
+
+      toast.error(responseData?.message || "Image generation failed");
+      return { success: false };
     }
+  };
+
+  useEffect(() => {
+    if (!token) return;
+    loadCreditsData();
   }, [token]);
 
   const value = {
@@ -56,6 +95,7 @@ const AppContextProvider = (props) => {
     setCredit,
     loadCreditsData,
     logout,
+    generateImage,
   };
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>

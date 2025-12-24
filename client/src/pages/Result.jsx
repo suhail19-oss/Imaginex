@@ -1,14 +1,42 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { AppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function Result() {
   const [image, setImage] = useState(assets.sample_img_1);
   const [isImageloaded, setisImageloaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
+  const { generateImage } = useContext(AppContext);
+  const navigate = useNavigate();
 
-  const onSubmitHandler = async (e) => {};
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    if (!input.trim()) {
+      toast.error("Please enter a prompt");
+      return;
+    }
+
+    setLoading(true);
+
+    const result = await generateImage(input);
+
+    setLoading(false);
+
+    if (!result.success && result.creditBalance === 0) {
+      navigate("/buy", { replace: true });
+      return;
+    }
+
+    if (result.success) {
+      setisImageloaded(true);
+      setImage(result.image);
+      toast.success("Image generated successfully");
+    }
+  };
 
   return (
     <form
@@ -97,6 +125,7 @@ function Result() {
             transition={{ delay: 0.25, duration: 0.4 }}
           >
             <motion.button
+              type="button"
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => setisImageloaded(false)}
