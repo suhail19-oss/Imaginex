@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { assets } from "../assets/assets";
 import { Link, useNavigate } from "react-router-dom";
-import { AppContext } from "../context/Appcontext";
+import { AppContext } from "../context/AppContext";
 import { LogOut } from "lucide-react";
 
 function Navbar() {
