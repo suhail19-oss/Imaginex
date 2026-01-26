@@ -2,19 +2,17 @@
 
 🔗 **Live Demo:** https://imaginex-frontend-md8b.onrender.com/
 
-Imaginex is a modern **AI-powered image generation web application** that allows users to generate and download high-quality images from text prompts, with an integrated **Razorpay payment gateway** for premium access.
+Imaginex is a modern **AI-powered image generation web application** that allows users to generate and download high-quality images from text prompts, with an integrated **Razorpay payment gateway**.
 
 ---
 
 ## 🧠 Overview
 
-Imaginex demonstrates real-world frontend and payment workflows by combining:
+Imaginex demonstrates real-world full-stack development by combining:
 - AI-based image generation
 - Secure payment integration
 - Image download functionality
 - Clean, responsive, production-ready UI
-
-The project focuses on **usability, performance, and practical system design**.
 
 ---
 
@@ -37,11 +35,12 @@ The project focuses on **usability, performance, and practical system design**.
 - Tailwind CSS
 - Render (Deployment)
 
-### Backend / APIs
-- AI Image Generation API
-- Secure environment variable handling
+### Backend
+- Node.js
+- Express.js
+- MongoDB
 
 ### Payments
-- **Razorpay Payment Gateway**
-git clone https://github.com/your-username/imaginex.git
-cd imaginex
+- Razorpay Payment Gateway
+
+No installation or setup is required for users or reviewers.
