@@ -42,5 +42,3 @@ Imaginex demonstrates real-world full-stack development by combining:
 
 ### Payments
 - Razorpay Payment Gateway
-
-No installation or setup is required for users or reviewers.
